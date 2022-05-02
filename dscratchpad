@@ -1,0 +1,34 @@
+#!/bin/sh
+# dScratchpad
+# I mean, it's sort of like one.
+# Licensed under GNU GPLv3
+# Written by speedie
+
+# Ask the user what to do
+CHOICE_1=$(printf "Create\nView\nDelete\nEdit\nExit" | dmenu -p "What do you wanna do?" -l 3)
+
+# Set variables
+case "$CHOICE_1" in
+"Create") action=create ;;
+"Edit") action=edit ;;
+"Delete") action=delete ;;
+"View") action=view ;;
+"Exit") exit 0 ;;
+"") exit 0 ;;
+esac
+
+case "$action" in
+"create") 
+   mkdir -pv /tmp/dscratchpad
+   NEW_SCRATCHPAD_NAME=$(printf "" | dmenu -p 'What do you wanna call it?' -l 20)
+   SCRATCHPAD_CONTENT=$(printf "" | dmenu -p 'What does this scratchpad contain?' -l 20)
+   printf "$SCRATCHPAD_CONTENT" > /tmp/dscratchpad/$NEW_SCRATCHPAD_NAME
+   notify-send "Scratchpad created with the name $NEW_SCRATCHPAD_NAME"
+   ${0} ; exit 0 
+;;
+"edit") SCRATCHPAD_EDIT=$(ls /tmp/dscratchpad | dmenu -p 'Which scratchpad do you wanna edit?' -l 20) && $TERMINAL $EDITOR /tmp/dscratchpad/$SCRATCHPAD_EDIT ; ${0} ; exit ;;
+"delete") SCRATCHPAD_DELETE=$(ls /tmp/dscratchpad | dmenu -p 'Which scratchpad do you wanna edit?' -l 20) && rm -f /tmp/dscratchpad/$SCRATCHPAD_DELETE && notify-send "Deleted $SCRATCHPAD_DELETE" ; ${0} ; exit 0 ;;
+"view") SCRATCHPAD_VIEW=$(ls /tmp/dscratchpad | dmenu -p 'Which scratchpad do you wanna view?' -l 20) && printf "$(cat /tmp/dscratchpad/$SCRATCHPAD_VIEW)" | dmenu -l 200 ; ${0} ; exit ;;
+esac
+
+exit 0
