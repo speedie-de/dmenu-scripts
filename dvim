@@ -1,4 +1,3 @@
 #!/bin/sh
 # This simple script lists out your scripts and opens them in $EDITOR
-. /usr/share/dwm-applications
-$EDITOR $SCRIPTDIR/$(ls -Apf1 $SCRIPTDIR | dmenu)
+$EDITOR ~/Scripts/$(ls -Apf1 ~/Scripts | dmenu)
